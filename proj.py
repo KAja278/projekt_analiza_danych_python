@@ -10,8 +10,8 @@ API_KEY = "AIzaSyACS_VxoOuQPG2WYwg27CTkrlQ11EcCQDo"
 youtube = build("youtube", "v3", developerKey=API_KEY)
 
 kanaly={
-    "KanalZeroPL":"UClhEl4bMD8_escGCCTmRAYg",
-    "ImponderabiliaTV": "UCoXxgqIOTa8qCM7Hd7RiURw"
+    "KanalZero":"UClhEl4bMD8_escGCCTmRAYg",
+    "ORB": "UCW5bKAEBFWz1yHKUEw3VLFg" #albo jeszcze propozycja: Na wschod od bliskiej wschodu albo Imponderabilia
 }
 
 def get_channel_vid(channel_id):
@@ -64,7 +64,7 @@ def get_video_inf(video_id,channel_n):
 
 
 
-def save_to_csv(rows, filename="yt_kanaly_inf.csv"):
+def save_to_csv(rows, filename):
 
     with open(filename, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(
@@ -86,11 +86,13 @@ def main():
         uploads_list_id = get_channel_vid(channel_id)
         video_ids = get_videos_id(uploads_list_id)
         videos_info = get_video_inf(video_ids, channel_name)
+        filename=f"{channel_name}_videos_info.csv"
+        save_to_csv(videos_info, filename)
         all_inf.extend(videos_info)
 
     print("Pobrano:", len(all_inf))
 
-    save_to_csv(all_inf)
+    save_to_csv(all_inf, filename)
 
 
 if __name__ == "__main__":
