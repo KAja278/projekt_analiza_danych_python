@@ -1,0 +1,11 @@
+# Klucze i sekrety
+.env
+
+# Dane lokalne (pobierane z API)
+data/
+
+# Środowisko wirtualne Pythona
+venv/
+.venv/
+__pycache__/
+*.pyc
