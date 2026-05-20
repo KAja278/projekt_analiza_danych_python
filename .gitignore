@@ -1,8 +1,8 @@
 # Klucze i sekrety
-.env
+#.env
 
 # Dane lokalne (pobierane z API)
-data/
+#data/
 
 # Środowisko wirtualne Pythona
 venv/
