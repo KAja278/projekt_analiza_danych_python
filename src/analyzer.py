@@ -8,16 +8,13 @@ def calculate_clickbait_score(title, views, likes):
     title_upper = title.upper()
 
     # 1. FORMATOWANIE I KRZYK (Max 5 pkt)
-    if title.endswith("?"):
-        score += 1
-    if "!" in title:
+    if "?" in title or "!" in title:
         score += 1
 
     # Analiza Caps Locka (min. 2 litery, odrzucamy skróty typu USA, PiS, PO, TVN, ORB)
-    clean_title = re.sub(r'\b(USA|PIS|PO|TVN|ORB|NBP|UE|UK|KO|FAME|MMA|VIP)\b', '', title)
-    words = re.findall(r"\b[A-ZŚĆŹŻÓŁĘĄŃ]{2,}\b", clean_title)
+    words = re.findall(r"\b[A-ZŚĆŹŻÓŁĘĄŃ]{2,}\b", title)
     if words:
-        total_words = len(re.findall(r"\b\w+\b", clean_title))
+        total_words = len(re.findall(r"\b\w+\b", title))
         if total_words > 0 and (len(words) / total_words) > 0.6:
             score += 2  # Drastyczny krzyk (większość tytułu)
         else:
@@ -30,17 +27,81 @@ def calculate_clickbait_score(title, views, likes):
         score += 1  # Presja czasu
     if "(" in title and ")" in title:
         score += 2  # "Nawias SEO" - upychanie nazwisk pod wyszukiwarkę (znak rozpoznawczy Konopskiego)
-    if "WSZYSTKO" in title_upper or "CAŁY" in title_upper:
+    if "WSZYSTKO" in title_upper or "CAŁY" in title_upper or "TOP" in title_upper:
         score += 1
 
-    # 3. PROFILOWANE SŁOWA KLUCZOWE (Max 10 pkt)
-    # Profil A: Sensacja YT / Commentary (Typowy Konopskyy)
-    sensacja_yt = ["AFERA", "SKANDAL", "DOWODY", "KŁAMSTWO", "OSZUSTWO", "PRAWDA O", "PORAŻAJĄCE", "SHOCKS", "WORLD", "KATASTROFA"]
-    # Profil B: Dramaturgia Publicystyczna / Polityczna (Kanał Zero / ORB)
-    publicystyka = ["WOJNA", "KONIEC", "UPADNIE", "UPADEK", "ZAGROŻENIE", "SOUSZ", "ZDRADA", "SPISEK", "ODCHODZI", "PILNE", "ROZPAD"]
-    # Profil C: Wyolbrzymianie / Atak / Memy
-    agresja_memy = ["DOJEŻDŻA", "ZAORAŁ", "MOCNE", "HIT", "ZEMSTA", "NIGDY", "XD", "DYMY", "GRILLOWANIE", "MASAKRA"]
+  # 3. PROFILOWANE SŁOWA KLUCZOWE (Max 10 pkt)
 
+    # Profil A: Sensacja YT / Commentary (Typowy Konopskyy)
+    sensacja_yt = [
+        "AFERA", "AFERY", "AFERZYSKO", 
+        "SKANDAL", "SKANDALICZNE", "SKANDALICZNA", "SKANDALE", 
+        "DOWODY", "DOWÓD", 
+        "KŁAMSTWO", "KŁAMSTWA", "OKŁAMAŁ", "OKŁAMAŁA", "OKŁAMALI", 
+        "OSZUSTWO", "OSZUSTWA", "OSZUKAŁ", "OSZUKALI", "OSZUKANA", 
+        "PRAWDA O", "CAŁA PRAWDA", "PRAWFĘ", 
+        "PORAŻAJĄCE", "PORAŻAJĄCA", "PORAŻAJĄCY", 
+        "SHOCKS", "SHOCKING", "SHOCK", 
+        "WORLD", 
+        "KATASTROFA", "KATASTROFALNE", "KATASTROFALNA",
+        # --- NOWE SŁOWA ---
+        "TAJEMNICA", "TAJEMNICE", "TAJNY", "TAJNE",       # Klasyczny clickbait na ciekawość
+        "UKRYWAŁ", "UKRYWALI", "UKRYWANE", "TUSZOWANIE",   # Sugestia spisku i kneblowania prawdy
+        "PRZEGRAŁ", "PRZEGRALI", "PRZEGRANA",              # Emocjonalne określenie porażki influencera
+        "KONFRONTACJA", "PRZYŁAPANY", "PRZYŁAPANI",        # Element "złapania na gorącym uczynku"
+        "UJAWNIA", "UJAWNIAM", "UJAWNIŁ", "WYCIEK",        # Słowa sugerujące ekskluzywne materiały/leaks
+        "KORUPCJA", "KORUPCYJNA", "ŁAPÓWKA"                # Mocne zarzuty o podłożu finansowym
+    ]
+
+    # Profil B: Dramaturgia Publicystyczna / Polityczna (Kanał Zero / ORB)
+    publicystyka = [
+        "WOJNA", "WOJNĘ", "WOJNY", "WOJENNY", 
+        "KONIEC", "KOŃCA", "KOŃCZY", "TO KONIEC", 
+        "UPADNIE", "UPADA", "UPADŁ", 
+        "UPADEK", "UPADKU", 
+        "ZAGROŻENIE", "ZAGROŻONA", "ZAGROŻONY", "ZAGRAŻA", 
+        "SOJUSZ", "SOJUSZE", "SOJUSZNICY", 
+        "ZDRADA", "ZDRADZIŁ", "ZDRADZILI", "ZDRADZONA", 
+        "SPISEK", "SPISKU", "SPISKOWCY", 
+        "ODCHODZI", "ODEJDZIE", "ODCHODZĄ", "ODYCHODZĄ", 
+        "PILNE", "PILNY", "PILNA", 
+        "ROZPAD", "ROZPADA", "ROZPADNIE", 
+        "APOKALIPSA", "APOKALIPSĘ", "APOKALIPTYCZNA", 
+        "TRUMP", "TRUMPA", "TRUMPOV", 
+        "PIS", "PIS-U", "PISU", 
+        "UKRAINA", "UKRAINY", "UKRAINIE", "UKRAINIEC",
+        # --- NOWE SŁOWA ---
+        "KRYZYS", "KRYZYSIE", "KRYZYSOWA",                 # Stały element miniatur publicystycznych
+        "REWOLUCJA", "REWOLUCJĘ", "PRZEWRÓT",               # Zmiany geo- i krajowo-polityczne
+        "BANKRUT", "BANKRUCTWO", "STRACI", "STRACĄ",       # Strach przed stratą pieniędzy/wpływów
+        "CENZURA", "CENZURUJĄ", "ZBANOWANY",               # Bardzo chwytliwy temat w debacie publicznej
+        "Rząd", "RZĄDU", "TUSK", "TUSKA", "KOALICJA",      # Dopełnienie polskiej sceny politycznej do pary z PiS
+        "CHINY", "CHIN", "USA", "AMERYKA", "ROSJA", "PUTIN" # Kluczowe potęgi w geopolityce globalnej
+    ]
+
+    # Profil C: Wyolbrzymianie / Atak / Memy
+    agresja_memy = [
+        "DOJEŻDŻA", "DOJECHAŁ", "DOJECHALI", "DOJEŻDŻAJĄ", 
+        "ZAORAŁ", "ZAORANE", "ZAORALI", "ORKA", 
+        "MOCNE", "MOCNA", "MOCNY", "MOCARNE", 
+        "HIT", "HICIOR", "HITOWE", 
+        "ZEMSTA", "MŚCI", "ZEMŚCIŁ", 
+        "NIGDY", "NIGDY WIĘCEJ", 
+        "XD", "XDD", "XDDD", 
+        "DYMY", "DYM", "ZADYMA", 
+        "GRILLOWANIE", "GRILLUJE", "SPALONY", 
+        "MASAKRA", "ZMASAKROWAŁ", "MASAKRUJE", 
+        "VS", "KONTRA", "PRZECIWKO", 
+        "WIELKA", "WIELKI", "WIELKIE", 
+        "OGROMNA", "OGROMNY", "OGROMNE",
+        # --- NOWE SŁOWA ---
+        "WŚCIEKŁY", "WŚCIEKŁA", "FURIAT", "AWANTURA",      # Podkręcanie emocji i agresji w tytule
+        "ODKLEJKA", "ODKLEJONY", "ODKLEIŁ",                # Bardzo popularne obecnie słowo na YT
+        "BÓL DUPY", "PŁACZE", "PŁACZ", "WYZWANY",           # Drwina z przeciwnika/bohatera filmu
+        "BEZLITOSNY", "BEZLITOSNA", "ZNISZCZYŁ",           # Sugestia totalnej dominacji w dyskusji
+        "BOOMER", "SIGMA", "CHAD", "CRIŃGE", "KRINDŻ",     # Słownictwo typowo memiczne/pokolenia Zet
+        "WYJAŚNIONY", "WYJAŚNIŁ", "WYJAŚNIONA"             # Synonim słowa "zaorał" (bardzo często używany)
+    ]
     if any(w in title_upper for w in sensacja_yt):
         score += 3  # Wyższa waga za typowo plotkarski/dramowy clickbait
     if any(w in title_upper for w in publicystyka):

@@ -4,7 +4,7 @@ Projekt bada i porównuje stopień manipulacji w tytułach filmów (Kanał Zero,
 
 ---
 
-## 🚦 Skala Punktacji (0-22 pkt)
+## Skala Punktacji (0-22 pkt)
 *   **0 – 2 pkt:** 1. Rzetelny / Neutralny
 *   **3 – 5 pkt:** 2. Lekki marketing newsowy
 *   **6 – 9 pkt:** 3. Wysoka manipulacja algorytmiczna
@@ -14,7 +14,7 @@ Algorytm premiuje: CAPS LOCK, pytajniki, wykrzykniki, presję czasu, nawiasy SEO
 
 ---
 
-## 📁 Struktura i uruchomienie
+## Struktura i uruchomienie
 
 1. **Instalacja bibliotek:**
    ```bash
