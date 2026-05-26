@@ -11,7 +11,7 @@ def calculate_clickbait_score(title, views, likes):
     if "?" in title or "!" in title:
         score += 1
 
-    # Analiza Caps Locka (min. 2 litery, odrzucamy skróty typu USA, PiS, PO, TVN, ORB)
+    # Analiza Caps Locka (min. 2 litery)
     words = re.findall(r"\b[A-ZŚĆŹŻÓŁĘĄŃ]{2,}\b", title)
     if words:
         total_words = len(re.findall(r"\b\w+\b", title))
@@ -44,13 +44,12 @@ def calculate_clickbait_score(title, views, likes):
         "SHOCKS", "SHOCKING", "SHOCK", 
         "WORLD", 
         "KATASTROFA", "KATASTROFALNE", "KATASTROFALNA",
-        # --- NOWE SŁOWA ---
-        "TAJEMNICA", "TAJEMNICE", "TAJNY", "TAJNE",       # Klasyczny clickbait na ciekawość
-        "UKRYWAŁ", "UKRYWALI", "UKRYWANE", "TUSZOWANIE",   # Sugestia spisku i kneblowania prawdy
-        "PRZEGRAŁ", "PRZEGRALI", "PRZEGRANA",              # Emocjonalne określenie porażki influencera
-        "KONFRONTACJA", "PRZYŁAPANY", "PRZYŁAPANI",        # Element "złapania na gorącym uczynku"
-        "UJAWNIA", "UJAWNIAM", "UJAWNIŁ", "WYCIEK",        # Słowa sugerujące ekskluzywne materiały/leaks
-        "KORUPCJA", "KORUPCYJNA", "ŁAPÓWKA"                # Mocne zarzuty o podłożu finansowym
+        "TAJEMNICA", "TAJEMNICE", "TAJNY", "TAJNE",       
+        "UKRYWAŁ", "UKRYWALI", "UKRYWANE", "TUSZOWANIE",  
+        "PRZEGRAŁ", "PRZEGRALI", "PRZEGRANA",              
+        "KONFRONTACJA", "PRZYŁAPANY", "PRZYŁAPANI",       
+        "UJAWNIA", "UJAWNIAM", "UJAWNIŁ", "WYCIEK",       
+        "KORUPCJA", "KORUPCYJNA", "ŁAPÓWKA"              
     ]
 
     # Profil B: Dramaturgia Publicystyczna / Polityczna (Kanał Zero / ORB)
@@ -70,13 +69,12 @@ def calculate_clickbait_score(title, views, likes):
         "TRUMP", "TRUMPA", "TRUMPOV", 
         "PIS", "PIS-U", "PISU", 
         "UKRAINA", "UKRAINY", "UKRAINIE", "UKRAINIEC",
-        # --- NOWE SŁOWA ---
-        "KRYZYS", "KRYZYSIE", "KRYZYSOWA",                 # Stały element miniatur publicystycznych
-        "REWOLUCJA", "REWOLUCJĘ", "PRZEWRÓT",               # Zmiany geo- i krajowo-polityczne
-        "BANKRUT", "BANKRUCTWO", "STRACI", "STRACĄ",       # Strach przed stratą pieniędzy/wpływów
-        "CENZURA", "CENZURUJĄ", "ZBANOWANY",               # Bardzo chwytliwy temat w debacie publicznej
-        "Rząd", "RZĄDU", "TUSK", "TUSKA", "KOALICJA",      # Dopełnienie polskiej sceny politycznej do pary z PiS
-        "CHINY", "CHIN", "USA", "AMERYKA", "ROSJA", "PUTIN" # Kluczowe potęgi w geopolityce globalnej
+        "KRYZYS", "KRYZYSIE", "KRYZYSOWA",                 
+        "REWOLUCJA", "REWOLUCJĘ", "PRZEWRÓT",               
+        "BANKRUT", "BANKRUCTWO", "STRACI", "STRACĄ",       
+        "CENZURA", "CENZURUJĄ", "ZBANOWANY",               
+        "Rząd", "RZĄDU", "TUSK", "TUSKA", "KOALICJA",      
+        "CHINY", "CHIN", "USA", "AMERYKA", "ROSJA", "PUTIN" 
     ]
 
     # Profil C: Wyolbrzymianie / Atak / Memy
@@ -94,14 +92,13 @@ def calculate_clickbait_score(title, views, likes):
         "VS", "KONTRA", "PRZECIWKO", 
         "WIELKA", "WIELKI", "WIELKIE", 
         "OGROMNA", "OGROMNY", "OGROMNE",
-        # --- NOWE SŁOWA ---
-        "WŚCIEKŁY", "WŚCIEKŁA", "FURIAT", "AWANTURA",      # Podkręcanie emocji i agresji w tytule
-        "ODKLEJKA", "ODKLEJONY", "ODKLEIŁ",                # Bardzo popularne obecnie słowo na YT
-        "BÓL DUPY", "PŁACZE", "PŁACZ", "WYZWANY",           # Drwina z przeciwnika/bohatera filmu
-        "BEZLITOSNY", "BEZLITOSNA", "ZNISZCZYŁ",           # Sugestia totalnej dominacji w dyskusji
-        "BOOMER", "SIGMA", "CHAD", "CRIŃGE", "KRINDŻ",     # Słownictwo typowo memiczne/pokolenia Zet
-        "WYJAŚNIONY", "WYJAŚNIŁ", "WYJAŚNIONA"             # Synonim słowa "zaorał" (bardzo często używany)
-    ]
+        "WŚCIEKŁY", "WŚCIEKŁA", "FURIAT", "AWANTURA",      
+        "ODKLEJKA", "ODKLEJONY", "ODKLEIŁ",                
+        "BÓL DUPY", "PŁACZE", "PŁACZ", "WYZWANY",          
+        "BEZLITOSNY", "BEZLITOSNA", "ZNISZCZYŁ",           
+        "BOOMER", "SIGMA", "CHAD", "CRIŃGE", "KRINDŻ",   
+        "WYJAŚNIONY", "WYJAŚNIŁ", "WYJAŚNIONA"           
+    ]   
     if any(w in title_upper for w in sensacja_yt):
         score += 3  # Wyższa waga za typowo plotkarski/dramowy clickbait
     if any(w in title_upper for w in publicystyka):
