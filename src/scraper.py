@@ -7,7 +7,8 @@ import isodate
 load_dotenv()
 API_KEY = os.getenv("YOUTUBE_API_KEY")
 MAX_WARNING_VIDEOS = 10000
-MIN_DURATION_SECONDS = 61
+MIN_DURATION_SECONDS = 121
+MAX_DURATION_SECONDS= 10800
 
 if not API_KEY:
     raise ValueError("Brak klucza API w pliku .env! Sprawdź konfigurację.")
@@ -17,7 +18,8 @@ youtube = build("youtube", "v3", developerKey=API_KEY)
 kanaly = {
     "KanalZero": "UClhEl4bMD8_escGCCTmRAYg",
     "ORB": "UCW5bKAEBFWz1yHKUEw3VLFg",
-    "Konopskyy": "UCR7uLtPuXsDpN8N6ocFQyeg"
+    "Konopskyy": "UCR7uLtPuXsDpN8N6ocFQyeg",
+    "Imponderabilia": "UCoXxgqIOTa8qCM7Hd7RiURw"
 }
 
 def get_channel_info(channel_id):
@@ -74,7 +76,7 @@ def get_video_inf(video_id, channel_n):
             duration_iso = item["contentDetails"]["duration"]
             duration_seconds = int(isodate.parse_duration(duration_iso).total_seconds())
 
-            if duration_seconds < MIN_DURATION_SECONDS:
+            if duration_seconds < MIN_DURATION_SECONDS or duration_seconds > MAX_DURATION_SECONDS:
                 continue
             row = {
                 "video_id": item["id"],
@@ -83,7 +85,10 @@ def get_video_inf(video_id, channel_n):
                 "published_at": item["snippet"]["publishedAt"],
                 "view_count": item["statistics"].get("viewCount", 0),
                 "like_count": item["statistics"].get("likeCount", 0),
-                "comment_count": item["statistics"].get("commentCount", 0)
+                "comment_count": item["statistics"].get("commentCount", 0),
+                "duration": duration_iso,
+                "duration_seconds": duration_seconds,
+                "category_id": item["snippet"].get("categoryId", None)
             }
             rows.append(row)
     return rows 
@@ -92,7 +97,7 @@ def save_to_csv(rows, filename):
     with open(filename, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=["video_id", "channel_name", "title", "published_at", "view_count", "like_count", "comment_count"]
+            fieldnames=["video_id", "channel_name", "title", "published_at", "view_count", "like_count", "comment_count","duration","duration_seconds","category_id"]
         )
         writer.writeheader()
         for row in rows:
