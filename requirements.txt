@@ -2,4 +2,5 @@ google-api-python-client
 python-dotenv
 pandas
 seaborn
+numpy
 matplotlib
