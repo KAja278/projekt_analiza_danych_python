@@ -102,9 +102,11 @@ def save_to_csv(rows, filename):
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
-
+'''
 def main():
     
+#main dla kilku kanałów
+
     os.makedirs("data/raw", exist_ok=True)
 
     for channel_name, channel_id in kanaly.items():
@@ -132,6 +134,46 @@ def main():
         print(f"Zapisano {len(videos_info)} filmów do {filename}")
 
     print("\nZakończono sprawdzanie i pobieranie danych w folderze data/raw/.")
+
+    
+'''
+
+def main():
+    #main dla jednego kanału 
+
+    os.makedirs("data/raw", exist_ok=True)
+
+    channel_name = input("Podaj nazwę kanału: ").strip()
+    channel_id = input("Podaj ID kanału: ").strip()
+
+    filename = f"data/raw/{channel_name}_videos_info.csv"
+    
+    if os.path.exists(filename):
+        print(f"Plik dla kanału {channel_name} już istnieje ({filename}). Pomijam pobieranie.")
+        return
+        
+    print(f"\nSprawdzanie kanału: {channel_name}...")
+
+    uploads_list_id, video_count = get_channel_info(channel_id)
+
+
+    if not ask_user_confirmation(channel_name, video_count):
+        return
+
+    print(f"Pobieranie ID filmów dla kanału: {channel_name}...")
+    video_ids = get_videos_id(uploads_list_id)
+
+    print(f"Pobieranie danych i filtrowanie dla kanału: {channel_name}...")
+    videos_info = get_video_inf(video_ids, channel_name)
+
+    save_to_csv(videos_info, filename)
+
+    with open("data/ostatni_kanal.txt", "w", encoding="utf-8") as f:
+        f.write(channel_name)
+
+
+    print(f"Zapisano {len(videos_info)} filmów do {filename}")
+
 
 if __name__ == "__main__":
     main()
