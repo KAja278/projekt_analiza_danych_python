@@ -4,3 +4,5 @@ pandas
 seaborn
 numpy
 matplotlib
+isodate
+scikit-learn
