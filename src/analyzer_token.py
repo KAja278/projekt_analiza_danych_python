@@ -191,7 +191,7 @@ def main():
                 for row in channel_analyzed_rows:
                     writer.writerow(row)
             print(f"-> Zapisano raport indywidualny: {channel_output_filename}")
-
+'''
     if all_analyzed_rows:
         total_output_filename = os.path.join("data", "processed", "ZBIORCZY_raport_clickbaitu.csv")
         with open(total_output_filename, "w", newline="", encoding="utf-8-sig") as f:
@@ -204,6 +204,8 @@ def main():
         print("-" * 50)
         print(f"Analiza zakończona! Przetworzono łącznie {len(all_analyzed_rows)} filmów.")
         print(f"Gotowy raport zbiorczy znajdziesz w: {total_output_filename}")
+
+'''
 
 if __name__ == "__main__":
     main()
